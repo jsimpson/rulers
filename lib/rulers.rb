@@ -1,4 +1,5 @@
-require "rulers/array"
+require "rulers/routing"
+
 require "rulers/version"
 
 module Rulers
@@ -6,11 +7,18 @@ module Rulers
 
   class Application
     def call(env)
-      [
-        200,
-        { 'Content-Type' => 'text/html' },
-        ["Hello, World!"]
-      ]
+      klass, act = get_controller_and_action(env)
+      controller = klass.new(env)
+      text = controller.send(act)
+      [200, { 'Content-Type' => 'text/html' }, [text]]
+    end
+  end
+
+  class Controller
+    attr_reader :env
+
+    def initialize(env)
+      @env = env
     end
   end
 end
