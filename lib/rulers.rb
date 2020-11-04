@@ -1,15 +1,15 @@
-require "rulers/routing"
-require "rulers/util"
-require "rulers/version"
+require 'rulers/routing'
+require 'rulers/util'
+require 'rulers/dependencies'
+
+require 'rulers/version'
 
 module Rulers
   class Error < StandardError; end
 
   class Application
     def call(env)
-      if env['PATH_INFO'] == '/favicon.ico'
-        return [404, { 'Content-Type' => 'text/html' }, []]
-      end
+      return [404, { 'Content-Type' => 'text/html' }, []] if env['PATH_INFO'] == '/favicon.ico'
 
       klass, act = get_controller_and_action(env)
       controller = klass.new(env)
